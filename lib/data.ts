@@ -1,36 +1,49 @@
-// @/lib/data.ts
+// lib/data.ts
 
 export type Asset = {
   id: string;
   name: string;
   description: string;
-  milestones: Milestone[];
+  image: string;
 };
 
 export type Milestone = {
   id: string;
+  assetId: string;
   title: string;
-  date: string;
   description: string;
+  date: string;
 };
 
-let assets: Asset[] = [];
-
-export const getAssets = (): Asset[] => {
-  return assets;
+// Store asset in localStorage
+export const createAsset = async (asset: Asset) => {
+  if (typeof window === "undefined") return;
+  const existing = await getAssets();
+  localStorage.setItem("assets", JSON.stringify([...existing, asset]));
 };
 
-export const getAssetById = (id: string): Asset | undefined => {
-  return assets.find((asset) => asset.id === id);
+// Retrieve all assets
+export const getAssets = async (): Promise<Asset[]> => {
+  if (typeof window === "undefined") return [];
+  const data = localStorage.getItem("assets");
+  return data ? JSON.parse(data) : [];
 };
 
-export const createAsset = (asset: Asset) => {
-  assets.push(asset);
+// Retrieve a single asset by ID
+export const getAssetById = async (id: string): Promise<Asset | null> => {
+  const assets = await getAssets();
+  return assets.find((asset) => asset.id === id) || null;
 };
 
-export const addMilestoneToAsset = (assetId: string, milestone: Milestone) => {
-  const asset = getAssetById(assetId);
-  if (asset) {
-    asset.milestones.push(milestone);
-  }
+// ✅ Milestone storage functions
+export const getMilestones = async (assetId: string): Promise<Milestone[]> => {
+  if (typeof window === "undefined") return [];
+  const data = localStorage.getItem(`milestones-${assetId}`);
+  return data ? JSON.parse(data) : [];
+};
+
+export const addMilestone = async (assetId: string, milestone: Milestone) => {
+  const existing = await getMilestones(assetId);
+  const updated = [...existing, milestone];
+  localStorage.setItem(`milestones-${assetId}`, JSON.stringify(updated));
 };
