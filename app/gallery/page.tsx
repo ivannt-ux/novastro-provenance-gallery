@@ -1,5 +1,5 @@
-import { getAllAssets } from "../../../lib/data";
-import AssetCard from "../../../components/AssetCard";
+import { getAllAssets } from "./lib/data";
+import AssetCard from "./components/AssetCard";
 
 export default function GalleryPage() {
   const assets = getAllAssets();
