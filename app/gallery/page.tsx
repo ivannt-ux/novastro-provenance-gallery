@@ -1,22 +1,33 @@
-// app/gallery/page.tsx
+'use client';
+
+import { useEffect, useState } from 'react';
+import { getAssets } from '@/lib/data';
 import Link from 'next/link';
-import { getAllAssets } from '@/lib/data';
 
 export default function GalleryPage() {
-  const assets = getAllAssets();
+  const [assets, setAssets] = useState<any[]>([]);
+
+  useEffect(() => {
+    const fetchAssets = async () => {
+      const data = await getAssets();
+      setAssets(data);
+    };
+    fetchAssets();
+  }, []);
 
   return (
-    <main className="p-6">
-      <h1 className="text-2xl font-bold mb-4">Asset Gallery</h1>
-      <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+    <div className="p-6">
+      <h1 className="text-2xl font-bold mb-4">Novastro Asset Gallery</h1>
+      <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4">
         {assets.map((asset) => (
-          <Link key={asset.id} href={`/assets/${asset.id}`} className="border p-4 rounded shadow">
-            <img src={asset.image} alt={asset.name} className="w-full h-40 object-cover mb-2" />
-            <h2 className="text-xl font-semibold">{asset.name}</h2>
-            <p className="text-sm">{asset.description}</p>
+          <Link href={`/assets/${asset.id}`} key={asset.id}>
+            <div className="border p-4 rounded shadow hover:shadow-lg transition">
+              <h2 className="font-semibold text-lg">{asset.name}</h2>
+              <p>{asset.description}</p>
+            </div>
           </Link>
         ))}
       </div>
-    </main>
+    </div>
   );
 }
