@@ -1,6 +1,6 @@
 // @/lib/near.ts
 
-import { connect, WalletConnection, keyStores, Near, ConnectConfig } from 'near-api-js';
+import { connect, WalletConnection, keyStores, ConnectConfig } from 'near-api-js';
 
 const config: ConnectConfig = {
   networkId: 'testnet',
