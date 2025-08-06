@@ -1,6 +1,6 @@
 "use client";
 import { useState } from "react";
-import { createAsset } from "../../../../lib/data";
+import { createAsset } from "../../../lib/data";
 import { useRouter } from "next/navigation";
 
 export default function CreateAssetPage() {
