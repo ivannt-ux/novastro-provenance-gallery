@@ -1,37 +1,57 @@
-import { Asset } from "./types";
+type Milestone = {
+  date: string;
+  text: string;
+};
 
-const STORAGE_KEY = "novastro_assets";
+type Asset = {
+  id: string;
+  name: string;
+  image: string;
+  description: string;
+  milestones: Milestone[];
+};
 
-export function getAssets(): Asset[] {
-  if (typeof window === "undefined") return [];
-  const raw = localStorage.getItem(STORAGE_KEY);
-  return raw ? JSON.parse(raw) : [];
+let assets: Asset[] = [];
+
+export function getAllAssets(): Asset[] {
+  return assets;
 }
 
 export function getAssetById(id: string): Asset | undefined {
-  return getAssets().find((a) => a.id === id);
+  return assets.find((a) => a.id === id);
 }
 
-export function addAsset(data: Omit<Asset, "id" | "milestones">) {
-  const current = getAssets();
+export function createAsset({
+  name,
+  image,
+  description,
+}: {
+  name: string;
+  image: string;
+  description: string;
+}): string {
   const newAsset: Asset = {
-    ...data,
     id: Date.now().toString(),
-    milestones: [],
+    name,
+    image,
+    description,
+    milestones: [
+      {
+        date: new Date().toISOString(),
+        text: "Asset created on Novastro",
+      },
+    ],
   };
-  localStorage.setItem(STORAGE_KEY, JSON.stringify([newAsset, ...current]));
+  assets.push(newAsset);
+  return newAsset.id;
 }
 
-export function addMilestone(id: string, milestone: string) {
-  const current = getAssets();
-  const updated = current.map((asset) => {
-    if (asset.id === id) {
-      return {
-        ...asset,
-        milestones: [...asset.milestones, milestone],
-      };
-    }
-    return asset;
-  });
-  localStorage.setItem(STORAGE_KEY, JSON.stringify(updated));
+export function addMilestone(assetId: string, text: string) {
+  const asset = getAssetById(assetId);
+  if (asset) {
+    asset.milestones.push({
+      date: new Date().toISOString(),
+      text,
+    });
+  }
 }
