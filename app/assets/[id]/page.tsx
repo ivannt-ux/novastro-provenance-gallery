@@ -1,5 +1,5 @@
-import { getAssetById } from "../../../../lib/data";
-import MilestoneTimeline from "../../../../components/MilestoneTimeline";
+import { getAssetById } from "./lib/data";
+import MilestoneTimeline from "./components/MilestoneTimeline";
 import { notFound } from "next/navigation";
 
 export default function AssetProfilePage({ params }: { params: { id: string } }) {
