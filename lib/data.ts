@@ -1,57 +1,36 @@
-type Milestone = {
-  date: string;
-  text: string;
-};
+// @/lib/data.ts
 
-type Asset = {
+export type Asset = {
   id: string;
   name: string;
-  image: string;
   description: string;
   milestones: Milestone[];
 };
 
+export type Milestone = {
+  id: string;
+  title: string;
+  date: string;
+  description: string;
+};
+
 let assets: Asset[] = [];
 
-export function getAllAssets(): Asset[] {
+export const getAssets = (): Asset[] => {
   return assets;
-}
+};
 
-export function getAssetById(id: string): Asset | undefined {
-  return assets.find((a) => a.id === id);
-}
+export const getAssetById = (id: string): Asset | undefined => {
+  return assets.find((asset) => asset.id === id);
+};
 
-export function createAsset({
-  name,
-  image,
-  description,
-}: {
-  name: string;
-  image: string;
-  description: string;
-}): string {
-  const newAsset: Asset = {
-    id: Date.now().toString(),
-    name,
-    image,
-    description,
-    milestones: [
-      {
-        date: new Date().toISOString(),
-        text: "Asset created on Novastro",
-      },
-    ],
-  };
-  assets.push(newAsset);
-  return newAsset.id;
-}
+export const createAsset = (asset: Asset) => {
+  assets.push(asset);
+};
 
-export function addMilestone(assetId: string, text: string) {
+export const addMilestoneToAsset = (assetId: string, milestone: Milestone) => {
   const asset = getAssetById(assetId);
   if (asset) {
-    asset.milestones.push({
-      date: new Date().toISOString(),
-      text,
-    });
+    asset.milestones.push(milestone);
   }
-}
+};
