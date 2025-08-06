@@ -15,33 +15,34 @@ export type Milestone = {
   date: string;
 };
 
-// Store asset in localStorage
+// Save new asset
 export const createAsset = async (asset: Asset) => {
   if (typeof window === "undefined") return;
   const existing = await getAssets();
   localStorage.setItem("assets", JSON.stringify([...existing, asset]));
 };
 
-// Retrieve all assets
+// Get all assets
 export const getAssets = async (): Promise<Asset[]> => {
   if (typeof window === "undefined") return [];
   const data = localStorage.getItem("assets");
   return data ? JSON.parse(data) : [];
 };
 
-// Retrieve a single asset by ID
+// Get a single asset by ID
 export const getAssetById = async (id: string): Promise<Asset | null> => {
   const assets = await getAssets();
   return assets.find((asset) => asset.id === id) || null;
 };
 
-// ✅ Milestone storage functions
+// Get all milestones for an asset
 export const getMilestones = async (assetId: string): Promise<Milestone[]> => {
   if (typeof window === "undefined") return [];
   const data = localStorage.getItem(`milestones-${assetId}`);
   return data ? JSON.parse(data) : [];
 };
 
+// ✅ This fixes the import error
 export const addMilestone = async (assetId: string, milestone: Milestone) => {
   const existing = await getMilestones(assetId);
   const updated = [...existing, milestone];
