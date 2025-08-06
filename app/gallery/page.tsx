@@ -1,17 +1,22 @@
-import { getAllAssets } from "./lib/data";
-import AssetCard from "./components/AssetCard";
+// app/gallery/page.tsx
+import Link from 'next/link';
+import { getAllAssets } from '@/lib/data';
 
 export default function GalleryPage() {
   const assets = getAllAssets();
 
   return (
-    <div className="p-6">
-      <h2 className="text-3xl font-bold mb-4">Asset Gallery</h2>
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+    <main className="p-6">
+      <h1 className="text-2xl font-bold mb-4">Asset Gallery</h1>
+      <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
         {assets.map((asset) => (
-          <AssetCard key={asset.id} asset={asset} />
+          <Link key={asset.id} href={`/assets/${asset.id}`} className="border p-4 rounded shadow">
+            <img src={asset.image} alt={asset.name} className="w-full h-40 object-cover mb-2" />
+            <h2 className="text-xl font-semibold">{asset.name}</h2>
+            <p className="text-sm">{asset.description}</p>
+          </Link>
         ))}
       </div>
-    </div>
+    </main>
   );
 }
