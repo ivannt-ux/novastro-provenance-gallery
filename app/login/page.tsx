@@ -1,5 +1,5 @@
 "use client";
-import { connectWallet } from "../../../lib/near";
+import { connectWallet } from "../lib/near";
 
 export default function LoginPage() {
   return (
