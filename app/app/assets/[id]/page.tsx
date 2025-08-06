@@ -1,5 +1,5 @@
-import { getAssetById } from "@/lib/data";
-import MilestoneTimeline from "@/components/MilestoneTimeline";
+import { getAssetById } from "../../../../lib/data";
+import MilestoneTimeline from "../../../../components/MilestoneTimeline";
 
 export default function AssetProfile({ params }: { params: { id: string } }) {
   const asset = getAssetById(params.id);
