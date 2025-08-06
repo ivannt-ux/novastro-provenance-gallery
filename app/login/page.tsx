@@ -1,16 +1,18 @@
-"use client";
-import { connectWallet } from "./lib/near";
+// app/login/page.tsx
+'use client';
+import { connectWallet } from '@/lib/near';
 
 export default function LoginPage() {
   return (
-    <div className="text-center mt-20">
-      <h2 className="text-2xl font-bold mb-4">Login with NEAR Wallet</h2>
+    <main className="p-6">
+      <h1 className="text-2xl font-bold">Connect Wallet</h1>
+      <p className="mb-4">Use your NEAR wallet to sign in and manage your assets on Novastro.</p>
       <button
         onClick={connectWallet}
-        className="bg-purple-600 text-white px-6 py-2 rounded hover:bg-purple-700"
+        className="px-4 py-2 bg-black text-white rounded hover:bg-gray-800"
       >
         Connect NEAR Wallet
       </button>
-    </div>
+    </main>
   );
 }
