@@ -1,6 +1,6 @@
 "use client";
 import { useEffect } from "react";
-import { connectWallet } from "@/lib/near";
+import { addMilestone } from "../../../../lib/data";
 
 export default function LoginPage() {
   useEffect(() => {
