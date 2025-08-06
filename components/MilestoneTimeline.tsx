@@ -1,12 +1,22 @@
-export default function MilestoneTimeline({ milestones }: { milestones: string[] }) {
-  if (!milestones?.length) return <p className="text-sm text-gray-500">No milestones yet.</p>;
+// @/components/MilestoneTimeline.tsx
 
+'use client';
+
+import { Milestone } from '@/lib/data';
+
+type Props = {
+  milestones: Milestone[];
+};
+
+export default function MilestoneTimeline({ milestones }: Props) {
   return (
-    <div className="mt-4 space-y-2 border-l-2 pl-4 border-blue-600">
+    <div className="p-4 space-y-4">
       {milestones.map((milestone, index) => (
-        <div key={index} className="relative">
-          <div className="absolute -left-3 top-1.5 w-2 h-2 bg-blue-600 rounded-full"></div>
-          <p className="text-sm">{milestone}</p>
+        <div key={milestone.id} className="border-l-2 border-gray-300 pl-4 relative">
+          <div className="absolute -left-2 top-1 w-4 h-4 bg-blue-500 rounded-full"></div>
+          <h4 className="text-lg font-semibold">{milestone.title}</h4>
+          <p className="text-sm text-gray-500">{milestone.date}</p>
+          <p className="text-sm">{milestone.description}</p>
         </div>
       ))}
     </div>
