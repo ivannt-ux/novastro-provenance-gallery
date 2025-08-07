@@ -1,44 +1,44 @@
+// app/login/page.tsx
 'use client';
 
 import { useEffect, useState } from 'react';
-import { initNear } from '@/lib/near';
-import { useRouter } from 'next/navigation';
+import { initNear, isSignedIn, signOut } from '@/lib/near';
 
 export default function LoginPage() {
-  const [walletAvailable, setWalletAvailable] = useState(false);
-  const router = useRouter();
+  const [signedIn, setSignedIn] = useState(false);
 
   useEffect(() => {
-    const checkWallet = async () => {
-      const wallet = await initNear();
-      if (wallet?.isSignedIn()) {
-        router.push('/gallery');
-      } else {
-        setWalletAvailable(true);
-      }
-    };
-
-    checkWallet();
-  }, [router]);
+    setSignedIn(isSignedIn());
+  }, []);
 
   const handleConnect = async () => {
     const wallet = await initNear();
-    wallet?.requestSignIn();
+    wallet?.requestSignIn(""); // Pass empty string as contractId
+  };
+
+  const handleSignOut = () => {
+    signOut();
+    setSignedIn(false);
   };
 
   return (
-    <div className="flex items-center justify-center h-screen">
-      <div className="text-center">
-        <h1 className="text-3xl font-bold mb-4">Welcome to Novastro Provenance Gallery</h1>
-        {walletAvailable && (
-          <button
-            onClick={handleConnect}
-            className="px-4 py-2 bg-black text-white rounded-lg hover:bg-gray-800"
-          >
-            Connect NEAR Wallet
-          </button>
-        )}
-      </div>
-    </div>
+    <main className="p-6">
+      <h1 className="text-2xl font-bold mb-4">Connect NEAR Wallet</h1>
+      {signedIn ? (
+        <button
+          onClick={handleSignOut}
+          className="px-4 py-2 bg-black text-white rounded hover:bg-gray-800"
+        >
+          Sign Out
+        </button>
+      ) : (
+        <button
+          onClick={handleConnect}
+          className="px-4 py-2 bg-black text-white rounded hover:bg-gray-800"
+        >
+          Connect Wallet
+        </button>
+      )}
+    </main>
   );
 }
