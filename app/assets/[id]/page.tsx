@@ -4,6 +4,7 @@
 import { useEffect, useState } from 'react';
 import { getAssetById } from '@/lib/data';
 import MilestoneTimeline from '@/components/MilestoneTimeline';
+import type { Asset } from '@/lib/types';
 
 export default function AssetProfilePage({ params }: { params: { id: string } }) {
   const [asset, setAsset] = useState<Asset | null>(null);
