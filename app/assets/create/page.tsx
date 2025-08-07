@@ -4,6 +4,7 @@
 import { useRouter } from 'next/navigation';
 import { createAsset } from '@/lib/data';
 import { useState } from 'react';
+import type { Asset } from '@/lib/types';
 
 export default function CreateAssetPage() {
   const router = useRouter();
@@ -11,10 +12,17 @@ export default function CreateAssetPage() {
   const [image, setImage] = useState('');
   const [description, setDescription] = useState('');
 
-  const handleSubmit = (e: any) => {
+  const handleSubmit = async (e: any) => {
     e.preventDefault();
-    const id = createAsset({ name, image, description });
-    router.push(`/assets/${id}`);
+    const newAsset: Asset = {
+      id: Date.now().toString(), // unique id for the asset
+      name,
+      image,
+      description,
+      milestones: [], // initialize as empty array
+    };
+    await createAsset(newAsset);
+    router.push(`/assets/${newAsset.id}`);
   };
 
   return (
