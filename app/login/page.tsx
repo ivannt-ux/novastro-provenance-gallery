@@ -13,9 +13,9 @@ export default function LoginPage() {
 
   const handleConnect = async () => {
     const wallet = await initNear();
-    // Pass options object as required by NEAR API
-    wallet?.requestSignIn({
-      contractId: "", // <-- put your contract ID here if you have one
+    if (!wallet) return; // SSR safeguard
+    wallet.requestSignIn({
+      contractId: '', // Optional: set your contract ID here
       successUrl: window.location.origin,
       failureUrl: window.location.origin,
     });
