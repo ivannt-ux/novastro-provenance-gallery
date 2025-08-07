@@ -13,7 +13,12 @@ export default function LoginPage() {
 
   const handleConnect = async () => {
     const wallet = await initNear();
-    wallet?.requestSignIn(""); // Pass empty string as contractId
+    // Pass options object as required by NEAR API
+    wallet?.requestSignIn({
+      contractId: "", // <-- put your contract ID here if you have one
+      successUrl: window.location.origin,
+      failureUrl: window.location.origin,
+    });
   };
 
   const handleSignOut = () => {
