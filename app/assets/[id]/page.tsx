@@ -1,9 +1,21 @@
 // app/assets/[id]/page.tsx
+'use client';
+
+import { useEffect, useState } from 'react';
 import { getAssetById } from '@/lib/data';
 import MilestoneTimeline from '@/components/MilestoneTimeline';
 
 export default function AssetProfilePage({ params }: { params: { id: string } }) {
-  const asset = getAssetById(params.id);
+  const [asset, setAsset] = useState<Asset | null>(null);
+
+  useEffect(() => {
+    const fetchAsset = async () => {
+      const data = await getAssetById(params.id);
+      setAsset(data);
+    };
+    fetchAsset();
+  }, [params.id]);
+
   if (!asset) return <div className="p-6">Asset not found</div>;
 
   return (
