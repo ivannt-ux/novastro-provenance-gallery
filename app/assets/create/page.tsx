@@ -1,4 +1,3 @@
-// app/assets/create/page.tsx
 'use client';
 
 import { useRouter } from 'next/navigation';
@@ -15,47 +14,52 @@ export default function CreateAssetPage() {
   const handleSubmit = async (e: any) => {
     e.preventDefault();
     const newAsset: Asset = {
-      id: Date.now().toString(), // unique id for the asset
+      id: Date.now().toString(),
       name,
       image,
       description,
-      milestones: [], // initialize as empty array
+      milestones: [],
     };
     await createAsset(newAsset);
     router.push(`/assets/${newAsset.id}`);
   };
 
   return (
-    <main className="p-6">
-      <h1 className="text-2xl font-bold mb-4">Create New Asset</h1>
-      <form onSubmit={handleSubmit} className="space-y-4 max-w-xl">
-        <input
-          type="text"
-          placeholder="Asset Name"
-          className="w-full border p-2 rounded"
-          value={name}
-          onChange={(e) => setName(e.target.value)}
-          required
-        />
-        <input
-          type="text"
-          placeholder="Image URL"
-          className="w-full border p-2 rounded"
-          value={image}
-          onChange={(e) => setImage(e.target.value)}
-          required
-        />
-        <textarea
-          placeholder="Asset Description"
-          className="w-full border p-2 rounded"
-          value={description}
-          onChange={(e) => setDescription(e.target.value)}
-          required
-        />
-        <button type="submit" className="px-4 py-2 bg-black text-white rounded hover:bg-gray-800">
-          Create Asset
-        </button>
-      </form>
+    <main className="flex justify-center items-center min-h-screen">
+      <div className="card max-w-xl w-full mx-auto space-y-6">
+        <h1 className="text-2xl font-bold mb-2 text-center">Create New Asset</h1>
+        <form onSubmit={handleSubmit} className="space-y-4">
+          <input
+            type="text"
+            placeholder="Asset Name"
+            className="w-full p-2 rounded border border-transparent focus:border-blue-300 bg-white bg-opacity-10 text-white placeholder-blue-100"
+            value={name}
+            onChange={(e) => setName(e.target.value)}
+            required
+          />
+          <input
+            type="text"
+            placeholder="Image URL"
+            className="w-full p-2 rounded border border-transparent focus:border-blue-300 bg-white bg-opacity-10 text-white placeholder-blue-100"
+            value={image}
+            onChange={(e) => setImage(e.target.value)}
+            required
+          />
+          <textarea
+            placeholder="Asset Description"
+            className="w-full p-2 rounded border border-transparent focus:border-blue-300 bg-white bg-opacity-10 text-white placeholder-blue-100"
+            value={description}
+            onChange={(e) => setDescription(e.target.value)}
+            required
+          />
+          <button
+            type="submit"
+            className="bg-[var(--blue-light)] text-[var(--blue-dark)] font-bold px-4 py-2 rounded shadow hover:bg-[var(--blue-medium)] hover:text-white transition"
+          >
+            Create Asset
+          </button>
+        </form>
+      </div>
     </main>
   );
 }
