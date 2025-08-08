@@ -14,4 +14,11 @@ This moves beyond mere replication to truly innovative ways of representing real
 - View asset history as a dynamic timeline
 - Fully responsive UI for mobile
 
+
+This project uses [Cloudinary](https://cloudinary.com/) for image uploads.
+
+
+This project uses [NEAR Wallet Selector](https://github.com/near/wallet-selector) for in-app NEAR wallet connections.
+
+
 > Built with Next.js, TailwindCSS, NEAR SDK, and deployed on Vercel.
