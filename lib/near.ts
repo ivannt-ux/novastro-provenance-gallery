@@ -1,53 +1,46 @@
-// lib/near.ts
+import { setupWalletSelector, WalletSelector } from "@near-wallet-selector/core";
+import { setupModal, WalletSelectorModal } from "@near-wallet-selector/modal-ui";
+import { setupNearWallet } from "@near-wallet-selector/near-wallet";
+import { setupMyNearWallet } from "@near-wallet-selector/my-near-wallet";
 
-import { Near, WalletConnection, keyStores, ConnectConfig } from 'near-api-js';
+import "@near-wallet-selector/modal-ui/styles.css";
 
-// These variables must only be initialized on the client.
-// Never access window or localStorage on the server!
-let near: Near | null = null;
-let wallet: WalletConnection | null = null;
+let selector: WalletSelector | null = null;
+let modal: WalletSelectorModal | null = null;
 
-// NEAR configuration for testnet; change as needed for mainnet.
-const config: Omit<ConnectConfig, 'keyStore'> = {
-  networkId: 'testnet',
-  nodeUrl: 'https://rpc.testnet.near.org',
-  walletUrl: 'https://wallet.testnet.near.org',
-  helperUrl: 'https://helper.testnet.near.org',
-  headers: {},
-};
-
-/**
- * Initializes NEAR and WalletConnection.
- * Only runs on the client; returns null on server.
- */
-export async function initNear(): Promise<WalletConnection | null> {
-  if (typeof window === 'undefined') return null;
-  if (!near) {
-    near = new Near({
-      ...config,
-      keyStore: new keyStores.BrowserLocalStorageKeyStore(),
+export async function initNear() {
+  if (!selector) {
+    selector = await setupWalletSelector({
+      network: "testnet",
+      modules: [
+        setupNearWallet(),
+        setupMyNearWallet()
+      ]
     });
+
+    modal = setupModal(selector, { contractId: "your-contract.testnet" });
   }
-  if (!wallet) {
-    wallet = new WalletConnection(near, null);
-  }
-  return wallet;
 }
 
-/**
- * Checks if the wallet is signed in.
- * Always returns false on server.
- */
-export function isSignedIn(): boolean {
-  if (typeof window === 'undefined' || !wallet) return false;
-  return wallet.isSignedIn();
+export async function connectWallet() {
+  await initNear();
+  if (modal) modal.show();
 }
 
-/**
- * Signs out of the wallet (client-only).
- */
-export function signOut(): void {
-  if (typeof window !== 'undefined' && wallet) {
-    wallet.signOut();
-  }
+export async function disconnectWallet() {
+  if (!selector) return;
+  const wallet = await selector.wallet();
+  await wallet.signOut();
+}
+
+export async function getAccountId(): Promise<string | null> {
+  if (!selector) return null;
+  const accounts = await selector.store.getState().accounts;
+  return accounts.length > 0 ? accounts[0].accountId : null;
+}
+
+export function isWalletConnected(): boolean {
+  if (!selector) return false;
+  const accounts = selector.store.getState().accounts;
+  return accounts.length > 0;
 }
