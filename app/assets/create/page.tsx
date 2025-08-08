@@ -1,65 +1,66 @@
-'use client';
+"use client";
 
-import { useRouter } from 'next/navigation';
-import { createAsset } from '@/lib/data';
-import { useState } from 'react';
-import type { Asset } from '@/lib/types';
+import { useState, useEffect } from "react";
+import { createAsset } from "@/lib/data";
+import { getAccountId, connectWallet } from "@/lib/near";
 
 export default function CreateAssetPage() {
-  const router = useRouter();
-  const [name, setName] = useState('');
-  const [image, setImage] = useState('');
-  const [description, setDescription] = useState('');
+  const [name, setName] = useState("");
+  const [description, setDescription] = useState("");
+  const [accountId, setAccountId] = useState<string | null>(null);
 
-  const handleSubmit = async (e: any) => {
+  useEffect(() => {
+    getAccountId().then(setAccountId);
+  }, []);
+
+  if (!accountId) {
+    return (
+      <main className="p-6 flex flex-col items-center">
+        <p className="text-white mb-4">Please connect your wallet to create an asset.</p>
+        <button
+          onClick={connectWallet}
+          className="bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded"
+        >
+          Connect Wallet
+        </button>
+      </main>
+    );
+  }
+
+  const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    const newAsset: Asset = {
-      id: Date.now().toString(),
-      name,
-      image,
-      description,
-      milestones: [],
-    };
-    await createAsset(newAsset);
-    router.push(`/assets/${newAsset.id}`);
+    createAsset({ name, description, owner: accountId });
+    setName("");
+    setDescription("");
+    alert("Asset created successfully!");
   };
 
   return (
-    <main className="flex justify-center items-center min-h-screen">
-      <div className="card max-w-xl w-full mx-auto space-y-6">
-        <h1 className="text-2xl font-bold mb-2 text-center">Create New Asset</h1>
-        <form onSubmit={handleSubmit} className="space-y-4">
-          <input
-            type="text"
-            placeholder="Asset Name"
-            className="w-full p-2 rounded border border-transparent focus:border-blue-300 bg-white bg-opacity-10 text-white placeholder-blue-100"
-            value={name}
-            onChange={(e) => setName(e.target.value)}
-            required
-          />
-          <input
-            type="text"
-            placeholder="Image URL"
-            className="w-full p-2 rounded border border-transparent focus:border-blue-300 bg-white bg-opacity-10 text-white placeholder-blue-100"
-            value={image}
-            onChange={(e) => setImage(e.target.value)}
-            required
-          />
-          <textarea
-            placeholder="Asset Description"
-            className="w-full p-2 rounded border border-transparent focus:border-blue-300 bg-white bg-opacity-10 text-white placeholder-blue-100"
-            value={description}
-            onChange={(e) => setDescription(e.target.value)}
-            required
-          />
-          <button
-            type="submit"
-            className="bg-[var(--blue-light)] text-[var(--blue-dark)] font-bold px-4 py-2 rounded shadow hover:bg-[var(--blue-medium)] hover:text-white transition"
-          >
-            Create Asset
-          </button>
-        </form>
-      </div>
+    <main className="p-6">
+      <h1 className="text-2xl font-bold mb-6 text-white">Create Asset</h1>
+      <form onSubmit={handleSubmit} className="space-y-4">
+        <input
+          type="text"
+          placeholder="Asset Name"
+          value={name}
+          onChange={(e) => setName(e.target.value)}
+          className="p-2 w-full rounded"
+          required
+        />
+        <textarea
+          placeholder="Asset Description"
+          value={description}
+          onChange={(e) => setDescription(e.target.value)}
+          className="p-2 w-full rounded"
+          required
+        />
+        <button
+          type="submit"
+          className="bg-green-500 hover:bg-green-600 text-white px-4 py-2 rounded"
+        >
+          Create
+        </button>
+      </form>
     </main>
   );
 }
