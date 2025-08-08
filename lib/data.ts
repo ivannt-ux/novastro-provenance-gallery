@@ -1,50 +1,32 @@
-// lib/data.ts
-
-export type Asset = {
+// Temporary in-memory storage (replace with DB or blockchain calls later)
+let assets: {
   id: string;
   name: string;
   description: string;
-  image: string;
-};
+  milestones: { date: string; description: string }[];
+}[] = [];
 
-export type Milestone = {
-  id: string;
-  assetId: string;
-  title: string;
-  description: string;
-  date: string;
-};
+export function getAllAssets() {
+  return assets;
+}
 
-// Save new asset
-export const createAsset = async (asset: Asset) => {
-  if (typeof window === "undefined") return;
-  const existing = await getAssets();
-  localStorage.setItem("assets", JSON.stringify([...existing, asset]));
-};
+export function createAsset(assetData: { name: string; description: string }) {
+  const newAsset = {
+    id: Date.now().toString(),
+    name: assetData.name,
+    description: assetData.description,
+    milestones: []
+  };
+  assets.push(newAsset);
+  return newAsset;
+}
 
-// Get all assets
-export const getAssets = async (): Promise<Asset[]> => {
-  if (typeof window === "undefined") return [];
-  const data = localStorage.getItem("assets");
-  return data ? JSON.parse(data) : [];
-};
-
-// Get a single asset by ID
-export const getAssetById = async (id: string): Promise<Asset | null> => {
-  const assets = await getAssets();
-  return assets.find((asset) => asset.id === id) || null;
-};
-
-// Get all milestones for an asset
-export const getMilestones = async (assetId: string): Promise<Milestone[]> => {
-  if (typeof window === "undefined") return [];
-  const data = localStorage.getItem(`milestones-${assetId}`);
-  return data ? JSON.parse(data) : [];
-};
-
-// ✅ This fixes the import error
-export const addMilestone = async (assetId: string, milestone: Milestone) => {
-  const existing = await getMilestones(assetId);
-  const updated = [...existing, milestone];
-  localStorage.setItem(`milestones-${assetId}`, JSON.stringify(updated));
-};
+export function addMilestone(
+  assetId: string,
+  milestoneData: { date: string; description: string }
+) {
+  const asset = assets.find((a) => a.id === assetId);
+  if (!asset) throw new Error("Asset not found");
+  asset.milestones.push(milestoneData);
+  return asset;
+}
