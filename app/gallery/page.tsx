@@ -3,6 +3,29 @@
 import { useEffect, useState } from 'react';
 import { getAssets } from '@/lib/data';
 import Link from 'next/link';
+import ImageUpload from "@/components/ImageUpload";
+import { useState } from "react";
+
+export default function GalleryPage() {
+  const [images, setImages] = useState<string[]>([]);
+
+  const handleImageUploaded = (url: string) => {
+    setImages((prev) => [...prev, url]);
+  };
+
+  return (
+    <div>
+      <h2>Upload an image</h2>
+      <ImageUpload onUploaded={handleImageUploaded} />
+      <h3>Gallery</h3>
+      <div style={{display:"flex", gap:"10px", flexWrap:"wrap"}}>
+        {images.map((img, idx) => (
+          <img key={idx} src={img} alt="Uploaded" style={{width:"200px"}} />
+        ))}
+      </div>
+    </div>
+  );
+}
 
 export default function GalleryPage() {
   const [assets, setAssets] = useState<any[]>([]);
