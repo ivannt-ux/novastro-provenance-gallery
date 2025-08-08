@@ -12,7 +12,12 @@ export default function RootLayout({ children }: { children: ReactNode }) {
     <html lang="en">
       <body>
         <Header />
-        <main className="p-4">{children}</main>
+        {/* Responsive, sharp container */}
+        <main>
+          <div className="w-full max-w-3xl mx-auto relative z-10">
+            {children}
+          </div>
+        </main>
       </body>
     </html>
   );
