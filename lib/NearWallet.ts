@@ -12,6 +12,6 @@ export async function initWalletSelector() {
     network: "testnet",
     modules: [setupNearWallet(), setupMyNearWallet()],
   });
-  setupModal(selector, { theme: "dark" });
+  setupModal(selector,  { theme: "dark" });
   return selector;
 }
